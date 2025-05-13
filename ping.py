@@ -35,16 +35,24 @@ game = True
 finish = False
 clock = time.Clock()
 FPS = 60
+speed_x = 3
+speed_y = 3
 
-racket1 = Player('', 30,200, 4, 50, 150)
-racket2 = Player('', 520, 200, 4, 50, 150)
-ball = GameSprite('tenis_ball.png', 200, 200, 4, 50, 50) 
+racket1 = Player('Bordertest.png', 30,200, 4, 50, 10, 75, 75)
+racket2 = Player('Bordertest.png', 520, 200, 4, 50, 10, 75, 75)
+ball = GameSprite('b6bac197-3af3-49d6-b8d7-37f923931059.png', 200, 200, 4, 50, 50, 75, 75) 
+font.init()
+font1 = font.Font(None, 35)
+lose1 = font1.render('PLAYER 1 LOSE!', True, (180, 0 , 0))
+lose2 = font1.render('PLAYER 2 LOSE!', True, (180, 0 , 0))
 
 while game:
     for e in event.get():
-        if e.type == QULT:
+        if e.type == QUIT:
             game = False
-    if finish != True
+    if finish != True:
+        ball.rect.x += speed_x
+        ball.rect.y += speed_y
         window.fill(back)
         racket1.update_l()
         racket2.update_r()
@@ -52,6 +60,19 @@ while game:
         racket1.reset()
         racket2.reset()
         ball.reset()
+    
+    if sprite.collide_rect(racket1, ball) or sprite.collide_rect(racket2, ball):
+            speed_x *= -1
+
+    if ball.rect.y > win_height-50 or ball.rect.y < 0:
+                speed_y *= -1
+    if ball.rect.x < 0:
+        finish = True
+        window.blit(lose1, (200, 200))
+
+    if ball.rect.x > 600:
+        finish = True
+        window.blit(lose2, (200, 200))
 
     display.update()
     clock.tick(FPS)
